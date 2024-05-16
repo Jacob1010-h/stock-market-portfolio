@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { Card, CardHeader, CardBody, CardFooter, Button } from 'reactstrap';
-import sampleData from './sampleData';
 import StockList from './StockList.js';
 
 function App() {
@@ -13,9 +12,54 @@ function App() {
   const [stocks, setStocks] = useState([]);
   const [stockList, setStockList] = useState([]);
   
+  const AWS_API_GATEWAY = "https://n1haz2qiqi.execute-api.us-east-1.amazonaws.com/prod";
+  const AWS_API_GATEWAY_GET_PORTFOLIO = AWS_API_GATEWAY + '/get-portfolio';
+  
   // Retrieve the current stock information when the page first loads
   useEffect(() => {
-    setStocks(sampleData);
+    const options = {
+      method: 'POST',
+      cache: 'default'
+    };
+    
+    fetch(AWS_API_GATEWAY_GET_PORTFOLIO, options)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(function(response) {
+        const stocks = response.Items;
+        let betterStocks = [];
+        
+        // {
+        //   "ticker":"",
+        //   "shares":0,
+        //   "purchasePrice":0.0,
+        //   "name":""
+        // }
+        for(let i = 0; i < stocks.length; i++) {
+          const ticker = Object.values(stocks[i].ticker);
+          const shares = Object.values(stocks[i].shares);
+          const purchasePrice = Object.values(stocks[i].purchasePrice);
+          const name = Object.values(stocks[i].name);
+          
+          betterStocks[i] = {
+            "ticker" : ticker[0],
+            "shares" : shares[0],
+            "purchasePrice" : purchasePrice[0],
+            "name" : name[0]
+          }
+        }
+          console.log(betterStocks);
+          setStocks(betterStocks)
+      })
+      .catch(function(error) {
+        console.log(error);
+      })
+
+    // setStocks(sampleData);
   }, []);
   
   // With the stock data add purchase value, current price
