@@ -12,8 +12,10 @@ function StockListTotals(props) {
   }, {currentValue: 0, purchaseValue: 0, profit: 0});
   const profitClass = totals.profit < 0 ? 'loss' : 'profit';
 
+  // Need the empty <td> tag for Del col
   return (
     <tr>
+      <td></td> 
       <th>TOTALS</th>
       <th colSpan="3">&nbsp;</th>
       <th className="money">{utilities.formatNumber(totals.purchaseValue)}</th>
