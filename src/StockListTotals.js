@@ -1,17 +1,21 @@
 import utilities from './utilities';
+import { useEffect } from 'react';
 
 function StockListTotals(props) {
   
   const { stocks } = props;
   
   const totals = stocks.reduce((summary, stock) => {
-    summary.profit += stock.profit;
-    summary.purchaseValue += stock.purchaseValue;
-    summary.currentValue += stock.currentValue;
+    if (!isNaN(stock.profit))
+      summary.profit += stock.profit;
+    if (!isNaN(stock.purchaseValue))
+      summary.purchaseValue += stock.purchaseValue;
+    if (!isNaN(stock.currentValue))
+      summary.currentValue += stock.currentValue;
     return summary;
   }, {currentValue: 0, purchaseValue: 0, profit: 0});
   const profitClass = totals.profit < 0 ? 'loss' : 'profit';
-
+  
   // Need the empty <td> tag for Del col
   return (
     <tr>

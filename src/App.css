@@ -21,11 +21,11 @@ td {
 }
 
 .profit {
-  color: darkgreen;
+  color: darkgreen !importantS;
 }
 
 .loss {
-  color: red;
+  color: red !important;
 }
 
 .summary {
